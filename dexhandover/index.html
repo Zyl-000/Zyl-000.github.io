@@ -29,6 +29,7 @@
         </div>
     </header>
 
+    <!-- Content synchronized with camera-ready manuscript commit 0ba801b (2026-10-13). -->
     <main id="main">
         <section class="hero container" aria-labelledby="project-title">
             <p class="conference">Conference on Robot Learning · 2026</p>
@@ -38,14 +39,13 @@
                 <span>Jingfan Qing<sup>2</sup></span>
                 <span>Zhibin Li<sup>3</sup></span>
                 <span>Jianran Liu<sup>4</sup></span>
-                <a href="https://libliu.info/" target="_blank" rel="noopener noreferrer">Libin Liu<sup>5,†</sup></a>
+                <a href="https://libliu.info/" target="_blank" rel="noopener noreferrer">Libin Liu<sup>2,†</sup></a>
             </div>
             <div class="affiliations">
                 <span><sup>1</sup> School of Computer Science, Peking University</span>
                 <span><sup>2</sup> School of Intelligence Science and Technology, Peking University</span>
                 <span><sup>3</sup> Department of Computer Science, University College London</span>
                 <span><sup>4</sup> ByteDance Seed</span>
-                <span><sup>5</sup> Peking University</span>
             </div>
             <p class="corresponding"><sup>†</sup> Corresponding author</p>
             <div class="hero-links">
@@ -62,11 +62,11 @@
         <section id="overview" class="section container" aria-labelledby="overview-title">
             <div class="section-heading"><p class="eyebrow">THE IDEA</p><h2 id="overview-title">A grasp that makes room for the next hand.</h2></div>
             <div class="prose">
-                <p>A secure single-hand grasp can block the surfaces needed by a receiving hand. Dexterous handover requires the giver to hold the object while leaving enough room for the receiver, and both hands to coordinate their finger contacts throughout the exchange.</p>
-                <p><strong>DexHandover</strong> maps object geometry to bimanual handover motions. We first synthesize physically validated pose pairs through joint optimization, then learn a two-stage conditional model to generate compatible giver and receiver poses. A reinforcement learning policy turns these poses into continuous motions, which we evaluate in simulation and replay on physical dexterous hands.</p>
+                <p>Autonomous handover requires a robot to determine compatible grasps and coordinate the motions of both dexterous hands. A stable single-hand grasp can occupy the surfaces the receiver needs. The giver must therefore secure the object while leaving feasible space and contact opportunities for the receiver.</p>
+                <p><strong>DexHandover focuses on generating compatible giver and receiver grasps from object geometry, with motion planning serving as a supporting capability.</strong> We jointly optimize both hands to build a physically validated pose dataset, then train a two-stage conditional model to generate handover-compatible grasp pairs. These poses anchor a reference trajectory tracked by an RL policy, connecting pose-level planning to continuous handover motions in simulation and open-loop execution on physical hands.</p>
             </div>
             <dl class="dataset-stats">
-                <div><dt>300K+</dt><dd>Physically validated pose pairs</dd></div>
+                <div><dt>300K+</dt><dd>Physically validated grasp pose pairs</dd></div>
                 <div><dt>701</dt><dd>Unique object models</dd></div>
                 <div><dt>37</dt><dd>Everyday object categories</dd></div>
             </dl>
@@ -82,7 +82,7 @@
 
             <div class="method-part">
                 <h3><span class="part-number">01</span> A dataset built for handover</h3>
-                <div class="prose"><p>We jointly optimize two ShadowHands around each object, balancing per-hand grasp quality with object and hand-hand penetration constraints. Each accepted pose pair must pass geometric filtering and independent grasp-stability tests for both hands under all six principal gravity directions.</p></div>
+                <div class="prose"><p>We jointly optimize two ShadowHands around each object, balancing per-hand grasp quality with object and hand-hand penetration constraints. Each accepted pose pair must pass geometric filtering and independent grasp-stability tests for both hands under all six principal gravity directions.</p><p>The dataset uses 701 object models from ShapeNetCore, ShapeNetSem, and the DDG object set. Joint optimization plans both grasps together, encouraging the giver to reserve usable surface for the receiver. This addresses the interference that can arise when a single-hand grasp is optimized first and the second hand is fitted afterward.</p></div>
                 <figure>
                     <a class="figure-link" href="./assets/dataset-generation.webp" target="_blank" rel="noopener noreferrer" aria-label="View the dataset generation figure at full size"><img src="./assets/dataset-generation.webp" alt="Dataset generation: optimize candidate handover poses, filter geometric violations, and validate grasp stability in simulation" width="1200" height="452" loading="lazy"></a>
                     <figcaption>Optimization proposes candidate pairs; physical validation retains compatible, independently stable grasps.</figcaption>
@@ -115,7 +115,45 @@
             </div>
         </section>
 
-        <section id="results" class="section container" aria-labelledby="results-title">
+        <section id="results" class="section container" aria-labelledby="pose-results-title">
+            <div class="section-heading"><p class="eyebrow">POSE GENERATION</p><h2 id="pose-results-title">Learning grasp pairs that leave room for transfer.</h2></div>
+            <div class="prose"><p>We evaluate one held-out object mesh from each of six categories. The input includes object geometry and approach directions sampled from validated pose pairs for that mesh. Although the test meshes are excluded from generator training, their validated directions are available because optimization covers all 701 objects.</p><p>The dataset baseline trains A-Net on single-hand Dexonomy grasps for the same object set and samples both hands independently. Learning from paired handover data reduces inter-hand interference and increases receiver clearance across all six evaluated categories.</p></div>
+            <div class="table-wrapper" role="region" aria-label="Pose generation comparison; scroll horizontally to view all metrics" tabindex="0">
+                <table class="pose-comparison-table">
+                    <caption>Hand-hand geometry on unseen object meshes</caption>
+                    <thead>
+                        <tr><th scope="col" rowspan="2">Object category</th><th scope="colgroup" colspan="2">Collision (%) ↓</th><th scope="colgroup" colspan="2">Penetration (mm) ↓</th><th scope="colgroup" colspan="2">Clearance (mm) ↑</th></tr>
+                        <tr><th scope="col">Baseline</th><th scope="col">Ours</th><th scope="col">Baseline</th><th scope="col">Ours</th><th scope="col">Baseline</th><th scope="col">Ours</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><th scope="row">Tissue box</th><td>49.72</td><td class="ours-cell">1.29</td><td>4.11</td><td class="ours-cell">0.05</td><td>13.31</td><td class="ours-cell">48.77</td></tr>
+                        <tr><th scope="row">Cereal box</th><td>47.32</td><td class="ours-cell">1.07</td><td>3.55</td><td class="ours-cell">0.06</td><td>15.07</td><td class="ours-cell">46.67</td></tr>
+                        <tr><th scope="row">Soda can</th><td>88.13</td><td class="ours-cell">4.54</td><td>8.12</td><td class="ours-cell">0.28</td><td>1.70</td><td class="ours-cell">46.01</td></tr>
+                        <tr><th scope="row">Food item</th><td>40.21</td><td class="ours-cell">3.70</td><td>1.38</td><td class="ours-cell">0.13</td><td>8.72</td><td class="ours-cell">22.49</td></tr>
+                        <tr><th scope="row">Video game controller</th><td>40.69</td><td class="ours-cell">9.66</td><td>1.46</td><td class="ours-cell">0.30</td><td>7.09</td><td class="ours-cell">19.21</td></tr>
+                        <tr><th scope="row">Mouse</th><td>72.64</td><td class="ours-cell">14.73</td><td>3.51</td><td class="ours-cell">0.45</td><td>1.48</td><td class="ours-cell">16.15</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="table-note">Collision rate uses a 1 mm threshold. Penetration measures mean interpenetration; clearance measures the mean gap between the hands. <span class="table-scroll-hint">Scroll horizontally to view all metrics.</span></p>
+
+            <h3 class="results-subheading">Same data, different generative models</h3>
+            <div class="prose"><p>All three models below are trained on DexHandover, and evaluated using raw outputs without sample selection. A-Net × 2 removes giver conditioning. The one-stage joint model generates both hands in the giver's wrist frame. Conditioning the receiver on the giver improves geometry over independent generation while preserving each hand's holding capability. Joint generation achieves better inter-hand geometry but lower individual grasp stability.</p></div>
+            <div class="table-wrapper" role="region" aria-label="Generator ablation results; scroll horizontally to view all metrics" tabindex="0">
+                <table class="ablation-table">
+                    <caption>Generator ablations on DexHandover</caption>
+                    <thead><tr><th scope="col">Method</th><th scope="col">Collision (%) ↓</th><th scope="col">Penetration (mm) ↓</th><th scope="col">Clearance (mm) ↑</th><th scope="col">Stability (%) ↑</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row">A-Net × 2</th><td>10.66</td><td>0.30</td><td>24.85</td><td>74.77</td></tr>
+                        <tr><th scope="row">One-stage joint</th><td><strong>5.75</strong></td><td><strong>0.15</strong></td><td><strong>30.24</strong></td><td>67.61</td></tr>
+                        <tr><th scope="row">Two-stage (ours)</th><td>8.71</td><td>0.233</td><td>28.87</td><td><strong>75.78</strong></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="table-note">Stability requires each hand alone to retain the object under all six principal gravity directions. Bold values indicate the best result for each metric. <span class="table-scroll-hint">Scroll horizontally to view all metrics.</span></p>
+        </section>
+
+        <section id="simulation" class="section container" aria-labelledby="results-title">
             <div class="section-heading"><p class="eyebrow">SIMULATION</p><h2 id="results-title">From compatible poses to successful exchanges.</h2></div>
             <div class="prose"><p>We evaluate the full pipeline on a held-out mesh from each of six categories, excluded from both pose-generator and policy training. Success requires a complete cycle of two consecutive exchanges. The RL policy improves success over PD tracking of the same reference trajectory in every evaluated category.</p></div>
             <div class="table-wrapper" role="region" aria-label="Simulation success rates" tabindex="0">
