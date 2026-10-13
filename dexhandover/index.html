@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="DexHandover: learning bimanual dexterous handovers from large-scale synthetic data. CoRL 2026.">
+    <meta name="theme-color" content="#ffffff">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="DexHandover | CoRL 2026">
+    <meta property="og:description" content="From object geometry to coordinated bimanual handover motions: synthetic pose data, conditional generation, and reinforcement learning.">
+    <meta property="og:url" content="https://zyl-000.github.io/dexhandover/">
+    <meta property="og:image" content="https://zyl-000.github.io/dexhandover/assets/overview.webp">
+    <link rel="canonical" href="https://zyl-000.github.io/dexhandover/">
+    <title>DexHandover | CoRL 2026</title>
+    <link rel="stylesheet" href="./style.css">
+    <script src="./project.js" defer></script>
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+        <div class="header-inner">
+            <a class="home-link" href="../"><span aria-hidden="true">←</span> Yulong Zhang</a>
+            <nav aria-label="Project navigation">
+                <a href="#overview">Overview</a>
+                <a href="#method">Method</a>
+                <a href="#results">Results</a>
+                <a href="#citation">Citation</a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main">
+        <section class="hero container" aria-labelledby="project-title">
+            <p class="conference">Conference on Robot Learning · 2026</p>
+            <h1 id="project-title"><span class="project-name">DexHandover</span><span class="project-title">Learning Bimanual Dexterous Handovers<br class="desktop-break"> from Large-Scale Synthetic Data</span></h1>
+            <div class="authors">
+                <a href="../">Yulong Zhang<sup>1</sup></a>
+                <span>Jingfan Qing<sup>2</sup></span>
+                <span>Zhibin Li<sup>3</sup></span>
+                <span>Jianran Liu<sup>4</sup></span>
+                <a href="https://libliu.info/" target="_blank" rel="noopener noreferrer">Libin Liu<sup>5,†</sup></a>
+            </div>
+            <div class="affiliations">
+                <span><sup>1</sup> School of Computer Science, Peking University</span>
+                <span><sup>2</sup> School of Intelligence Science and Technology, Peking University</span>
+                <span><sup>3</sup> Department of Computer Science, University College London</span>
+                <span><sup>4</sup> ByteDance Seed</span>
+                <span><sup>5</sup> Peking University</span>
+            </div>
+            <p class="corresponding"><sup>†</sup> Corresponding author</p>
+            <div class="hero-links">
+                <span class="resource-pending"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l4 4v14H7zM14 3v5h4M10 12h5M10 16h5" /></svg> Paper coming soon</span>
+                <a class="button button-primary" href="#method">Explore the method <span aria-hidden="true">↓</span></a>
+                <a class="button" href="#citation">BibTeX</a>
+            </div>
+            <figure class="hero-figure">
+                <img src="./assets/overview.webp" alt="DexHandover pipeline: joint pose optimization, two-stage generative modeling, reinforcement learning, and real-world robot execution" width="1828" height="1100" fetchpriority="high">
+                <figcaption>A Shape-to-Motion pipeline that turns object geometry into coordinated giver-to-receiver motions.</figcaption>
+            </figure>
+        </section>
+
+        <section id="overview" class="section container" aria-labelledby="overview-title">
+            <div class="section-heading"><p class="eyebrow">THE IDEA</p><h2 id="overview-title">A grasp that makes room for the next hand.</h2></div>
+            <div class="prose">
+                <p>A secure single-hand grasp can block the surfaces needed by a receiving hand. Dexterous handover requires the giver to hold the object while leaving enough room for the receiver, and both hands to coordinate their finger contacts throughout the exchange.</p>
+                <p><strong>DexHandover</strong> maps object geometry to bimanual handover motions. We first synthesize physically validated pose pairs through joint optimization, then learn a two-stage conditional model to generate compatible giver and receiver poses. A reinforcement learning policy turns these poses into continuous motions, which we evaluate in simulation and replay on physical dexterous hands.</p>
+            </div>
+            <dl class="dataset-stats">
+                <div><dt>300K+</dt><dd>Physically validated pose pairs</dd></div>
+                <div><dt>701</dt><dd>Unique object models</dd></div>
+                <div><dt>37</dt><dd>Everyday object categories</dd></div>
+            </dl>
+        </section>
+
+        <section id="method" class="section container" aria-labelledby="method-title">
+            <div class="section-heading"><p class="eyebrow">SHAPE TO MOTION</p><h2 id="method-title">Three stages, one coordinated handover.</h2></div>
+            <ol class="pipeline-summary">
+                <li><span class="step-number">01</span><h3>Synthesize data</h3><p>Optimize both hands together and validate each hand's grasp in physics simulation.</p></li>
+                <li><span class="step-number">02</span><h3>Generate pose pairs</h3><p>Predict the giver, then condition the receiver on the object and the generated giver.</p></li>
+                <li><span class="step-number">03</span><h3>Learn the motion</h3><p>Track a pose-anchored reference with reinforcement learning to coordinate the exchange.</p></li>
+            </ol>
+
+            <div class="method-part">
+                <h3><span class="part-number">01</span> A dataset built for handover</h3>
+                <div class="prose"><p>We jointly optimize two ShadowHands around each object, balancing per-hand grasp quality with object and hand-hand penetration constraints. Each accepted pose pair must pass geometric filtering and independent grasp-stability tests for both hands under all six principal gravity directions.</p></div>
+                <figure>
+                    <a class="figure-link" href="./assets/dataset-generation.webp" target="_blank" rel="noopener noreferrer" aria-label="View the dataset generation figure at full size"><img src="./assets/dataset-generation.webp" alt="Dataset generation: optimize candidate handover poses, filter geometric violations, and validate grasp stability in simulation" width="1200" height="452" loading="lazy"></a>
+                    <figcaption>Optimization proposes candidate pairs; physical validation retains compatible, independently stable grasps.</figcaption>
+                </figure>
+                <figure class="gallery-figure">
+                    <a class="figure-link" href="./assets/dataset-gallery.webp" target="_blank" rel="noopener noreferrer" aria-label="View the pose dataset gallery at full size"><img src="./assets/dataset-gallery.webp" alt="Gallery of validated bimanual poses across bottles, cans, boxes, tools, cameras, and other everyday objects" width="1608" height="1381" loading="lazy"></a>
+                    <figcaption>Representative pose pairs from the DexHandover dataset. The two colors distinguish the giving and receiving hands.</figcaption>
+                </figure>
+            </div>
+
+            <div class="method-part">
+                <h3><span class="part-number">02</span> Generate the giver, then the receiver</h3>
+                <div class="prose"><p><strong>A-Net</strong> predicts a giving-hand pose from the object point cloud. <strong>C-Net</strong> receives the combined object and generated giving-hand geometry, and predicts a receiving-hand pose in the remaining space. Both networks use the same conditional variational autoencoder architecture; their conditioning geometry differs.</p><p>The approach directions are controlled by rotating the input geometry. In the reported held-out-object evaluation, these directions are sampled from validated pose pairs for the test mesh.</p></div>
+                <figure>
+                    <a class="figure-link" href="./assets/pose-generation.webp" target="_blank" rel="noopener noreferrer" aria-label="View the two-stage generative model figure at full size"><img src="./assets/pose-generation.webp" alt="A-Net and C-Net training and inference: object geometry generates the giver; combined giver-object geometry generates the receiver" width="1857" height="887" loading="lazy"></a>
+                    <figcaption>The giver becomes part of the receiver's conditioning geometry, making their spatial relationship explicit.</figcaption>
+                </figure>
+            </div>
+
+            <div class="method-part motion-part">
+                <div>
+                    <h3><span class="part-number">03</span> Coordinate contacts through the exchange</h3>
+                    <p>Generated poses anchor an interpolated reference trajectory. A residual reinforcement learning policy adjusts the hand motion during contact, supporting the object as control passes between the hands.</p>
+                    <p>In simulation, the hands alternate giver and receiver roles in a repeating four-phase loop. Hardware experiments replay one exchange extracted from the policy rollout.</p>
+                </div>
+                <figure>
+                    <a class="figure-link" href="./assets/rl-cycle.webp" target="_blank" rel="noopener noreferrer" aria-label="View the simulated handover cycle at full size"><img src="./assets/rl-cycle.webp" alt="Four-phase simulation cycle: receiver approach and grasp, giver release, role reversal, and the next exchange" width="500" height="446" loading="lazy"></a>
+                    <figcaption>A repeating handover cycle in simulation.</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section id="results" class="section container" aria-labelledby="results-title">
+            <div class="section-heading"><p class="eyebrow">SIMULATION</p><h2 id="results-title">From compatible poses to successful exchanges.</h2></div>
+            <div class="prose"><p>We evaluate the full pipeline on a held-out mesh from each of six categories, excluded from both pose-generator and policy training. Success requires a complete cycle of two consecutive exchanges. The RL policy improves success over PD tracking of the same reference trajectory in every evaluated category.</p></div>
+            <div class="table-wrapper" role="region" aria-label="Simulation success rates" tabindex="0">
+                <table class="simulation-table">
+                    <caption>Simulated handover success rate (%)</caption>
+                    <thead><tr><th scope="col">Object category</th><th scope="col">Naive tracking</th><th scope="col">Ours (RL)</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row">Tissue box</th><td>38.3</td><td><div class="rate"><span class="rate-fill" style="--rate:92.3%"></span><strong>92.3</strong></div></td></tr>
+                        <tr><th scope="row">Cereal box</th><td>23.2</td><td><div class="rate"><span class="rate-fill" style="--rate:84.4%"></span><strong>84.4</strong></div></td></tr>
+                        <tr><th scope="row">Soda can</th><td>37.6</td><td><div class="rate"><span class="rate-fill" style="--rate:97.6%"></span><strong>97.6</strong></div></td></tr>
+                        <tr><th scope="row">Food item</th><td>21.9</td><td><div class="rate"><span class="rate-fill" style="--rate:85.3%"></span><strong>85.3</strong></div></td></tr>
+                        <tr><th scope="row">Video game controller</th><td>8.8</td><td><div class="rate"><span class="rate-fill" style="--rate:72.2%"></span><strong>72.2</strong></div></td></tr>
+                        <tr><th scope="row">Mouse</th><td>22.6</td><td><div class="rate"><span class="rate-fill" style="--rate:75.1%"></span><strong>75.1</strong></div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="section container" aria-labelledby="hardware-title">
+            <div class="section-heading"><p class="eyebrow">PHYSICAL ROBOTS</p><h2 id="hardware-title">Replaying the handover on two XHands.</h2></div>
+            <div class="prose"><p>We retarget the simulated finger trajectories by matching fingertip positions and compute arm motion from the simulated wrist trajectory using inverse kinematics. The grasp, lift, and exchange are replayed in open loop.</p></div>
+            <figure>
+                <a class="figure-link" href="./assets/hardware.webp" target="_blank" rel="noopener noreferrer" aria-label="View the real-world handover sequences at full size"><img src="./assets/hardware.webp" alt="Real-world robot handover sequences, progressing from the giving hand's grasp and lift to receiver takeover and separation" width="2062" height="631" loading="lazy"></a>
+                <figcaption>Each row shows a single real-world exchange, from grasp and lift to receiver takeover.</figcaption>
+            </figure>
+            <div class="hardware-results">
+                <div class="hardware-summary"><p class="result-count">19<span>/25</span></p><p class="result-label">Successful hardware trials</p><p>Five trials per object, with placement varied by up to 2 cm and approach directions held fixed. Success requires the hands to separate with the object held by the receiver.</p></div>
+                <div class="table-wrapper" role="region" aria-label="Hardware success counts" tabindex="0">
+                    <table class="hardware-table">
+                        <caption>Open-loop execution of one exchange</caption>
+                        <thead><tr><th scope="col">Object</th><th scope="col">Type</th><th scope="col">Success</th></tr></thead>
+                        <tbody>
+                            <tr><th scope="row">Tissue box</th><td>Deformable</td><td>5/5</td></tr>
+                            <tr><th scope="row">Medicine ball</th><td>Deformable</td><td>3/5</td></tr>
+                            <tr><th scope="row">Sponge cuboid</th><td>Deformable</td><td>4/5</td></tr>
+                            <tr><th scope="row">Soda can</th><td>Rigid</td><td>5/5</td></tr>
+                            <tr><th scope="row">Printed cuboid</th><td>Rigid</td><td>2/5</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <p class="limitations"><strong>Current limitations.</strong> Pose generation uses complete object geometry, and open-loop hardware replay is sensitive to changes in contact and object placement. Feedback on the object's in-hand pose is an important direction for future work.</p>
+        </section>
+
+        <section id="citation" class="section container citation-section" aria-labelledby="citation-title">
+            <div class="citation-heading"><div class="section-heading"><p class="eyebrow">REFERENCE</p><h2 id="citation-title">Citation</h2></div><div class="citation-actions"><a href="./citation.bib" download>Download .bib</a><button id="copy-citation" type="button" hidden>Copy BibTeX</button></div></div>
+            <pre><code id="bibtex">@inproceedings{zhang2026dexhandover,
+  title     = {DexHandover: Learning Bimanual Dexterous Handovers from Large-Scale Synthetic Data},
+  author    = {Zhang, Yulong and Qing, Jingfan and Li, Zhibin and Liu, Jianran and Liu, Libin},
+  booktitle = {Conference on Robot Learning},
+  year      = {2026}
+}</code></pre>
+            <p id="copy-status" class="copy-status" aria-live="polite"></p>
+        </section>
+    </main>
+
+    <footer class="site-footer container"><a href="../">← Back to Yulong Zhang's homepage</a><span>DexHandover · CoRL 2026</span></footer>
+</body>
+</html>
