@@ -1,19 +1,102 @@
 <!DOCTYPE html>
-<html lang="en" >
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Firework</title>
-  <link rel="stylesheet" href="./css/app.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Yulong Zhang's personal homepage and research publications.">
+    <meta name="theme-color" content="#ffffff">
+    <title>Yulong Zhang</title>
+    <link rel="stylesheet" href="./css/app.css">
+    <script src="./javascript/app.js" defer></script>
 </head>
 <body>
-<!-- partial:index.partial.html -->
-<div>
-<canvas id="canvas"></canvas>
-  </div>
-<!-- partial -->
-  <script  src="./javascript/app.js"></script>
-
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+        <div class="header-inner">
+            <a class="site-name" href="#about">Yulong Zhang</a>
+            <nav aria-label="Main navigation">
+                <a href="#about">About</a>
+                <a href="#publications">Publications</a>
+            </nav>
+        </div>
+    </header>
+    <main id="main" class="main-content">
+        <section id="about" class="profile" aria-labelledby="profile-name">
+            <!-- Replace this placeholder with your portrait when ready. -->
+            <div class="portrait-placeholder" role="img" aria-label="Profile photo to be added">
+                <svg viewBox="0 0 80 80" fill="none" aria-hidden="true">
+                    <circle cx="40" cy="27" r="13" />
+                    <path d="M15 65c0-14 11-24 25-24s25 10 25 24" />
+                </svg>
+            </div>
+            <div class="profile-info">
+                <h1 id="profile-name">Yulong Zhang</h1>
+                <!-- Add your affiliation and biography here when ready. -->
+                <div class="biography-placeholder" role="img" aria-label="Biography to be added">
+                    <span></span><span></span><span></span>
+                </div>
+                <div class="contact-links">
+                    <a href="https://github.com/Zyl-000" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+                    <!-- Add email, Google Scholar, and CV links here when available. -->
+                </div>
+            </div>
+        </section>
+        <section id="publications" class="publications" aria-labelledby="publications-title">
+            <div class="section-heading">
+                <h2 id="publications-title">Publications</h2>
+                <span class="section-year">2026</span>
+            </div>
+            <!-- Publication details and thumbnails imported from https://libliu.info/ on 2026-10-13. -->
+            <div class="publication-list">
+                <article class="publication" aria-labelledby="dexhandover-title">
+                    <div class="publication-image">
+                        <img src="./images/dexhandover.jpg" alt="DexHandover: bimanual dexterous object handover" width="560" height="315">
+                    </div>
+                    <div class="publication-info">
+                        <h3 id="dexhandover-title">DexHandover: Learning Bimanual Dexterous Handovers from Large-Scale Synthetic Data</h3>
+                        <p class="authors"><strong>Yulong Zhang</strong>, Jingfan Qing, Zhibin Li, Jianran Liu, <a href="https://libliu.info/" target="_blank" rel="noopener noreferrer">Libin Liu</a><sup>†</sup></p>
+                        <p class="venue">Conference on Robot Learning (CoRL), 2026 <span class="publication-status">To appear</span></p>
+                        <p class="description">Learning robot-to-robot handovers from object geometry through synthetic grasp data, conditional pose generation, and reinforcement learning.</p>
+                        <div class="publication-links"><span class="pending-link">Paper coming soon</span></div>
+                    </div>
+                </article>
+                <article class="publication" aria-labelledby="wam-title">
+                    <a class="publication-image" href="https://arxiv.org/abs/2607.06988" target="_blank" rel="noopener noreferrer" aria-label="Read the WAM-TTT paper">
+                        <img src="./images/wam-ttt.jpg" alt="WAM-TTT: adapting world-action models from human videos" width="560" height="315" loading="lazy">
+                    </a>
+                    <div class="publication-info">
+                        <h3 id="wam-title"><a href="https://arxiv.org/abs/2607.06988" target="_blank" rel="noopener noreferrer">WAM-TTT: Steering World-Action Models by Watching Human Play at Test Time</a></h3>
+                        <p class="authors"><a href="https://wangchek.github.io/" target="_blank" rel="noopener noreferrer">Yusen Feng</a><sup>*</sup>, Bingchen Han<sup>*</sup>, <a href="https://jiangranlv.github.io/" target="_blank" rel="noopener noreferrer">Jiangran Lyu</a><sup>*</sup>, Kai Liu, Yixin Zheng, Yuxuan Wan, Weiheng Liu, Sun Han, Ruiqin Li, <strong>Yulong Zhang</strong>, Fangfu Liu, Xuesong Shi, <a href="https://libliu.info/" target="_blank" rel="noopener noreferrer">Libin Liu</a><sup>†</sup>, <a href="https://cfcs.pku.edu.cn/english/people/faculty/yizhouwang/index.htm" target="_blank" rel="noopener noreferrer">Yizhou Wang</a><sup>†</sup>, Zhizheng Zhang<sup>†</sup>, <a href="https://hughw19.github.io/" target="_blank" rel="noopener noreferrer">He Wang</a><sup>†</sup></p>
+                        <p class="venue">Conference on Robot Learning (CoRL), 2026 <span class="publication-status">To appear</span></p>
+                        <p class="description">Adapting frozen world-action models at test time using human videos and self-supervised prediction, without robot action labels.</p>
+                        <div class="publication-links"><a href="https://arxiv.org/abs/2607.06988" target="_blank" rel="noopener noreferrer">Paper <span aria-hidden="true">↗</span></a></div>
+                    </div>
+                </article>
+                <article class="publication" aria-labelledby="dextercap-title">
+                    <a class="publication-image" href="https://pku-mocca.github.io/Dextercap-Page/" target="_blank" rel="noopener noreferrer" aria-label="Visit the DexterCap project page">
+                        <img src="./images/dextercap.jpg" alt="DexterCap: capturing dexterous hand-object interactions" width="560" height="315" loading="lazy">
+                    </a>
+                    <div class="publication-info">
+                        <h3 id="dextercap-title"><a href="https://pku-mocca.github.io/Dextercap-Page/" target="_blank" rel="noopener noreferrer">DexterCap: An Affordable and Automated System for Capturing Dexterous Hand-Object Manipulation</a></h3>
+                        <p class="authors"><a href="https://www.lyt0112.com/" target="_blank" rel="noopener noreferrer">Yutong Liang</a><sup>*</sup>, Shiyi Xu<sup>*</sup>, <strong>Yulong Zhang</strong><sup>*</sup>, Bowen Zhan, <a href="https://cghezhang.github.io/" target="_blank" rel="noopener noreferrer">He Zhang</a>, <a href="https://libliu.info/" target="_blank" rel="noopener noreferrer">Libin Liu</a><sup>†</sup></p>
+                        <p class="venue">Eurographics 2026</p>
+                        <p class="description">An affordable capture system for detailed hand-object manipulation, with the DexterHand dataset of fine-grained interactions.</p>
+                        <div class="publication-links">
+                            <a href="https://pku-mocca.github.io/Dextercap-Page/" target="_blank" rel="noopener noreferrer">Project <span aria-hidden="true">↗</span></a>
+                            <a href="https://arxiv.org/abs/2601.05844" target="_blank" rel="noopener noreferrer">Paper <span aria-hidden="true">↗</span></a>
+                            <a href="https://github.com/PKU-MoCCA/dextercap" target="_blank" rel="noopener noreferrer">Code <span aria-hidden="true">↗</span></a>
+                            <a href="https://www.lyt0112.com/projects/DexterCap" target="_blank" rel="noopener noreferrer">Demo <span aria-hidden="true">↗</span></a>
+                            <a href="https://huggingface.co/datasets/pku-mocca/DexterHand" target="_blank" rel="noopener noreferrer">Dataset <span aria-hidden="true">↗</span></a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            <p class="author-notes"><sup>*</sup> Equal contribution. <sup>†</sup> Corresponding author.</p>
+        </section>
+    </main>
+    <footer class="site-footer">
+        <span>© <span id="current-year">2026</span> Yulong Zhang</span>
+        <a href="#about">Back to top <span aria-hidden="true">↑</span></a>
+    </footer>
 </body>
 </html>
